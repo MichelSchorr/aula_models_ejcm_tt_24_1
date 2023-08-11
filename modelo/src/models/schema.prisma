@@ -10,28 +10,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Client {
+  id         Int        @id @default(autoincrement())
+  cpf        String     @unique
+  email      String     @unique
+  phone      String     @unique
+  firstName  String
+  lastName   String
+  followedBy Client[]   @relation("ClientFollows")
+  following  Client[]   @relation("ClientFollows")
+  cart       Cart?
+  purchase   Purchase[]
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+model Cart {
+  client   Client           @relation(fields: [id], references: [id])
+  id       Int              @id
+  total    Float?
+  products ProductsOnCart[]
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+model Product {
+  id           Int                  @id @default(autoincrement())
+  name         String
+  price        Float
+  category     String
+  availability Int
+  description  String?
+  purchases    ProductsOnPurchase[]
+  carts        ProductsOnCart[]
+}
+
+model Purchase {
+  data     DateTime             @default(now())
+  client   Client               @relation(fields: [clientId], references: [id])
+  clientId Int
+  status   String
+  total    Float
+  products ProductsOnPurchase[]
+
+  @@id([data, clientId])
+}
+
+model ProductsOnPurchase {
+  product          Product  @relation(fields: [productId], references: [id])
+  productId        Int
+  purchase         Purchase @relation(fields: [purchaseData, purchaseClientId], references: [data, clientId])
+  purchaseData     DateTime
+  purchaseClientId Int
+  amount           Int
+  total            Float
+
+  @@id([productId, purchaseData, purchaseClientId])
+}
+
+model ProductsOnCart {
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  cartId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  amount    Int
+
+  @@id([cartId, productId])
 }
