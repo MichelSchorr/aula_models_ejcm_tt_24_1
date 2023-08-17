@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 interface Product {
     name: string;
     price: number;
-    category: string;
     availability: number;
+    category: string;
     description: string;
 }
 
@@ -17,16 +17,16 @@ class ProductController {
             const {
                 name,
                 price,
-                category,
                 availability,
+                category,
                 description,
             }: Product = req.body;
 
             let productInput: Prisma.ProductCreateInput = {
                 name,
                 price,
-                category,
                 availability,
+                category,
                 description,
             };
 
@@ -70,16 +70,16 @@ class ProductController {
             const {
                 name,
                 price,
-                category,
                 availability,
+                category,
                 description,
             }: Product = req.body;
 
             let productInput: Prisma.ProductUpdateInput = {
                 name,
                 price,
-                category,
                 availability,
+                category,
                 description,
             };
 
