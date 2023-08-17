@@ -14,7 +14,7 @@ model Client {
   id         Int        @id @default(autoincrement())
   cpf        String     @unique
   email      String     @unique
-  phone      String     @unique
+  phone      String[]   @unique
   firstName  String
   lastName   String
   followedBy Client[]   @relation("ClientFollows")
@@ -26,17 +26,17 @@ model Client {
 model Cart {
   client   Client           @relation(fields: [id], references: [id])
   id       Int              @id
-  total    Float?
+  total    Float?           @map("totalValue")
   products ProductsOnCart[]
 }
 
 model Product {
   id           Int                  @id @default(autoincrement())
   name         String
-  price        Float
+  price        Decimal              @db.Money
   category     String
   availability Int
-  description  String?
+  description  String?              @db.Text
   purchases    ProductsOnPurchase[]
   carts        ProductsOnCart[]
 }
