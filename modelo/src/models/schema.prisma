@@ -35,7 +35,7 @@ model Product {
   name         String
   price        Decimal              @db.Money
   category     String
-  availability Int
+  availability Int                  
   description  String?              @db.Text
   purchases    ProductsOnPurchase[]
   carts        ProductsOnCart[]
