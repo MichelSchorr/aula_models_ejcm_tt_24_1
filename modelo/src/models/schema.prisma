@@ -11,65 +11,78 @@ datasource db {
 }
 
 model Client {
-  id         Int        @id @default(autoincrement())
-  cpf        String     @unique
-  email      String     @unique
-  phone      String[]   @unique
-  firstName  String
-  lastName   String
-  followedBy Client[]   @relation("ClientFollows")
-  following  Client[]   @relation("ClientFollows")
-  cart       Cart?
-  purchase   Purchase[]
+  id        Int        @id @default(autoincrement())
+  cpf       String     @unique @db.Char(11)
+  email     String     @unique @db.VarChar(75)
+  phone     String[]   @unique @db.Char(14)
+  firstName String     @map("first_name") @db.VarChar(25)
+  lastName  String     @map("last_name") @db.VarChar(25)
+  follower  Client[]   @relation(name: "client_follows")
+  following Client[]   @relation(name: "client_follows")
+  cart      Cart?
+  purchase  Purchase[]
+
+  @@unique([firstName, lastName])
+  @@map("client")
 }
 
 model Cart {
-  client   Client           @relation(fields: [id], references: [id])
-  id       Int              @id
-  total    Float?           @map("totalValue")
-  products ProductsOnCart[]
+  client     Client           @relation(fields: [clientId], references: [id])
+  clientId   Int              @id @map("client_id")
+  totalValue Decimal          @map("total_value") @db.Money
+  product    ProductsOnCart[] @ignore
+
+  @@map("cart")
 }
 
 model Product {
-  id           Int                  @id @default(autoincrement())
-  name         String
-  price        Decimal              @db.Money
-  category     String
-  availability Int
-  description  String?              @db.Text
-  purchases    ProductsOnPurchase[]
-  carts        ProductsOnCart[]
+  id          Int                  @id @default(autoincrement())
+  name        String               @db.VarChar(100)
+  price       Decimal              @db.Money
+  category    String[]             @db.VarChar(30)
+  stock       Int
+  description String?              @db.Text
+  purchase    ProductsOnPurchase[] @ignore
+  cart        ProductsOnCart[]     @ignore
+
+  @@index(fields: [category], name: "product_ix_category")
+  @@map("product")
 }
 
 model Purchase {
-  data     DateTime             @default(now())
-  client   Client               @relation(fields: [clientId], references: [id])
-  clientId Int
-  status   String
-  total    Float
-  products ProductsOnPurchase[]
+  date       DateTime             @default(now())
+  client     Client               @relation(fields: [clientId], references: [id])
+  clientId   Int                  @map("client_id")
+  status     String
+  totalValue Decimal              @map("total_value") @db.Money
+  product    ProductsOnPurchase[] @ignore
 
-  @@id([data, clientId])
+  @@id([date, clientId])
+  @@map("purchase")
 }
 
 model ProductsOnPurchase {
-  product          Product  @relation(fields: [productId], references: [id])
-  productId        Int
-  purchase         Purchase @relation(fields: [purchaseData, purchaseClientId], references: [data, clientId])
-  purchaseData     DateTime
-  purchaseClientId Int
-  amount           Int
-  total            Float
+  product             Product  @relation(fields: [productId], references: [id])
+  productId           Int      @map("product_id")
+  purchase            Purchase @relation(fields: [purchaseDate, purchaseClientId], references: [date, clientId])
+  purchaseDate        DateTime @map("purchase_date")
+  purchaseClientId    Int      @map("purchase_client_id")
+  amount              Int
+  unitValueOnPurchase Decimal  @map("unit_value_on_purchase") @db.Money
 
-  @@id([productId, purchaseData, purchaseClientId])
+  @@id([productId, purchaseDate, purchaseClientId])
+  @@map("products_on_purchase")
+  @@ignore
 }
 
 model ProductsOnCart {
-  cart      Cart    @relation(fields: [cartId], references: [id])
-  cartId    Int
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  amount    Int
+  cart         Cart    @relation(fields: [cartClientId], references: [clientId])
+  cartClientId Int     @map("cart_client_id")
+  product      Product @relation(fields: [productId], references: [id])
+  productId    Int     @map("product_id")
+  amount       Int
 
-  @@id([cartId, productId])
+  @@id([cartClientId, productId])
+  @@map("products_on_cart")
+  @@ignore
 }
