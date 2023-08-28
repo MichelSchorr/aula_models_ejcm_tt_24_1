@@ -3,30 +3,25 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-interface Client {
-    cpf: string,
-    email: string,
-    phone: string,
-    firstName: string,
-    lastName: string,
-    followedBy: number,
-    following: number
-}
 
 class ClientController {
 
     async create(req: Request, res: Response){
         try{
-            const { cpf, email , phone, firstName, lastName}:Client = req.body;
+            const { cpf, email , phone, firstName, lastName} = req.body;
             let clientInput: Prisma.ClientCreateInput = {
                 cpf,
                 email,
                 firstName,
                 lastName,
-                phone               
+                phone,
+                              
             }
+                       
+            
             const client = await prisma.client.create({
-                data: clientInput,               
+                data: clientInput
+                          
             })
             return res.status(201).json(client);
 
@@ -39,7 +34,7 @@ class ClientController {
         try {
             const client = await prisma.client.findMany({
                 include: {
-                    followedBy: true,
+                    follower: true,
                     following: true
                 }
             })
@@ -58,7 +53,7 @@ class ClientController {
                     id: Number(id)
                 },
                 include:{
-                    followedBy: true,
+                    follower: true,
                     following: true
                 }
             })
@@ -72,7 +67,7 @@ class ClientController {
     async update(req: Request, res: Response){
         try {
             const { id } = req.params;
-            const { cpf, email , phone, firstName, lastName }:Client = req.body;
+            const { cpf, email , phone, firstName, lastName }= req.body;
             let clientInput: Prisma.ClientUpdateInput = {
                 cpf,
                 email,

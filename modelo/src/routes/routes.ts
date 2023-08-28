@@ -1,6 +1,7 @@
 import { Router } from "express";
 import clientController from "../controllers/clientController";
 import productController from "../controllers/productController";
+import purchaseController from "../controllers/purchaseController";
 
 const router = Router()
 
@@ -20,6 +21,10 @@ router.post("/product", productController.create);
 router.get("/product/:id", productController.show);
 router.put("/product/:id", productController.update);
 router.delete("/product/:id", productController.destroy);
+
+router.post("/purchase/:id", purchaseController.create)
+router.get("/purchases", purchaseController.index)
+router.delete("/purchaseDelete/:clientId/:date", purchaseController.destroy)
 
 
 
