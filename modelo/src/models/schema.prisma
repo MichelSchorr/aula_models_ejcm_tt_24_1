@@ -14,6 +14,8 @@ model Client {
   id        Int        @id @default(autoincrement())
   cpf       String     @unique @db.Char(11)
   email     String     @unique @db.VarChar(75)
+  hash      String
+  salt      String
   phone     String[]   @unique @db.Char(14)
   firstName String     @map("first_name") @db.VarChar(25)
   lastName  String     @map("last_name") @db.VarChar(25)
@@ -30,7 +32,7 @@ model Cart {
   client     Client           @relation(fields: [clientId], references: [id])
   clientId   Int              @id @map("client_id")
   totalValue Decimal          @map("total_value") @db.Money
-  product    ProductsOnCart[] 
+  product    ProductsOnCart[]
 
   @@map("cart")
 }
@@ -42,8 +44,8 @@ model Product {
   category    String[]             @db.VarChar(30)
   stock       Int
   description String?              @db.Text
-  purchase    ProductsOnPurchase[] 
-  cart        ProductsOnCart[]     
+  purchase    ProductsOnPurchase[]
+  cart        ProductsOnCart[]
 
   @@index(fields: [category], name: "product_ix_category")
   @@map("product")
@@ -55,7 +57,7 @@ model Purchase {
   clientId   Int                  @map("client_id")
   status     String
   totalValue Decimal              @map("total_value") @db.Money
-  product    ProductsOnPurchase[] 
+  product    ProductsOnPurchase[]
 
   @@id([date, clientId])
   @@map("purchase")
@@ -72,7 +74,6 @@ model ProductsOnPurchase {
 
   @@id([productId, purchaseDate, purchaseClientId])
   @@map("products_on_purchase")
-  
 }
 
 model ProductsOnCart {
@@ -84,5 +85,4 @@ model ProductsOnCart {
 
   @@id([cartClientId, productId])
   @@map("products_on_cart")
-  
 }
