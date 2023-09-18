@@ -7,7 +7,8 @@ interface Product {
     name: string;
     price: number;
     availability: number;
-    category: string;
+    category: string[];
+    stock: number;
     description: string;
 }
 
@@ -16,17 +17,17 @@ class ProductController {
         try {
             const {
                 name,
-                price,
-                availability,
+                price,                
                 category,
+                stock,
                 description,
-            }: Product = req.body;
+            } = req.body;
 
             let productInput: Prisma.ProductCreateInput = {
                 name,
-                price,
-                availability,
+                price,             
                 category,
+                stock,
                 description,
             };
 
@@ -69,17 +70,17 @@ class ProductController {
             const { id } = req.params;
             const {
                 name,
-                price,
-                availability,
+                price,              
                 category,
+                stock,
                 description,
-            }: Product = req.body;
+            } = req.body;
 
             let productInput: Prisma.ProductUpdateInput = {
                 name,
-                price,
-                availability,
+                price,                
                 category,
+                stock,
                 description,
             };
 

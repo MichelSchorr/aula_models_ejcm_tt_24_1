@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port, () => {
+app.listen(3333, () => {
   console.log(
     `⚡️[${process.env.APP_NAME}]: Server is running at http://localhost:${port}`
   );
