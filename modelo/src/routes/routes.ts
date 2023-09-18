@@ -2,8 +2,12 @@ import { Router } from "express";
 import clientController from "../controllers/clientController";
 import productController from "../controllers/productController";
 import purchaseController from "../controllers/purchaseController";
+import authController from "../controllers/authController";
 
 const router = Router()
+
+router.post("/login", authController.login);
+router.get("/clientInfo", authController.getDetails);
 
 
 router.post("/client", clientController.create)

@@ -1,5 +1,6 @@
 import { Prisma , PrismaClient} from "@prisma/client";
 import { Request, Response } from "express";
+import auth from "../config/auth";
 
 const prisma = new PrismaClient();
 
@@ -8,15 +9,19 @@ class ClientController {
 
     async create(req: Request, res: Response){
         try{
-            const { cpf, email , phone, firstName, lastName} = req.body;
+            const { cpf, email , phone, firstName, lastName, password} = req.body;
+
+            const { hash, salt } = auth.generatePassword(password);
             let clientInput: Prisma.ClientCreateInput = {
                 cpf,
                 email,
                 firstName,
                 lastName,
                 phone,
-                              
-            }
+                hash,
+                salt
+                
+            }     
                        
             
             const client = await prisma.client.create({
