@@ -17,20 +17,22 @@ interface Client {
 let data: Client[] = [];
 
 for(let i = 0; i < 20; i++) {
-	  const password = faker.string.alphanumeric({ length: 8 });
-		const salt = crypto.randomBytes(32).toString("hex");
-		const hash = crypto
-		  	.pbkdf2Sync(password, salt, 10000, 64, "sha512")
-				.toString("hex");
+	  // const password = faker.string.alphanumeric({ length: 8 });
+		// const salt = crypto.randomBytes(32).toString("hex");
+		// const hash = crypto
+		//   	.pbkdf2Sync(password, salt, 10000, 64, "sha512")
+		// 		.toString("hex");
 
     data.push({
 			email: faker.internet.email(),
 			cpf: faker.string.numeric({ length: 11, allowLeadingZeros: false }),
-			hash: hash,
-			salt: salt,
+			// hash: hash,
+			// salt: salt,
+			hash: faker.string.alphanumeric(30),
+			salt: faker.string.alphanumeric(30),
 			firstName: faker.person.firstName(),
 			lastName: faker.person.lastName(),
-			phone: [faker.phone.number.toString(), faker.phone.number.toString(), faker.phone.number.toString()]
+			phone: [faker.phone.number()]
 		});
 }
 
