@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { clientSeed } from "./models/clientSeed";
 
 const prisma = new PrismaClient();
 
 async function main() {
     
     /* funcoes importadas */
+    await clientSeed()
 
 }
 
