@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client"
-import { faker } from "@faker-js/faker/locale/pt_BR"
-import crypto from "crypto"
+import { PrismaClient } from "@prisma/client";
+import { faker } from "@faker-js/faker/locale/pt_BR";
+import crypto from "crypto";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 interface Client {
     email: string
@@ -14,20 +14,26 @@ interface Client {
 		phone: string[]
 }
 
-let data: Client[] = []
+let data: Client[] = [];
 
 for(let i = 0; i < 20; i++) {
+	  const password = faker.string.alphanumeric({ length: 8 });
+		const salt = crypto.randomBytes(32).toString("hex");
+		const hash = crypto
+		  	.pbkdf2Sync(password, salt, 10000, 64, "sha512")
+				.toString("hex");
+
     data.push({
 			email: faker.internet.email(),
 			cpf: faker.string.numeric({ length: 11, allowLeadingZeros: false }),
-			hash: crypto.createHash.toString(),
-			salt: faker.string.alphanumeric(16),
+			hash: hash,
+			salt: salt,
 			firstName: faker.person.firstName(),
 			lastName: faker.person.lastName(),
 			phone: [faker.phone.number.toString(), faker.phone.number.toString(), faker.phone.number.toString()]
-		})
+		});
 }
 
 export async function clientSeed() {
-    await prisma.client.createMany({ data })
+    await prisma.client.createMany({ data });
 }
