@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 
 interface Client {
     email: string
-		cpf: string 
-		hash: string 
-		salt: string
-		firstName: string
-		lastName: string
-		phone: string[]
+	cpf: string 
+	hash: string 
+	salt: string
+	firstName: string
+	lastName: string
+	phone: string[]
 }
 
 let data: Client[] = [];
@@ -32,7 +32,7 @@ for(let i = 0; i < 20; i++) {
 			salt: faker.string.alphanumeric(30),
 			firstName: faker.person.firstName(),
 			lastName: faker.person.lastName(),
-			phone: [faker.phone.number()]
+			phone: [faker.string.numeric({ length: 14, allowLeadingZeros: false })]
 		});
 }
 
