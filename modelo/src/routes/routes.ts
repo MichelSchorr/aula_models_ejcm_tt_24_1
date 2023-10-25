@@ -19,6 +19,7 @@ router.post("/follow", clientController.follow)
 router.post("/unfollow", clientController.unfollow)
 
 
+
 router.get("/product", productController.index);
 router.post("/product", productController.create);
 router.get("/product/:id", productController.show);
