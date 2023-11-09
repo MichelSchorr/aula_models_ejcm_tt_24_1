@@ -3,14 +3,14 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-// interface Product {
-//     name: string;
-//     price: number;
-//     availability: number;
-//     category: string[];
-//     stock: number;
-//     description: string;
-// }
+interface Product {
+    name: string;
+    price: number;
+    availability: number;
+    category: string[];
+    stock: number;
+    description: string;
+}
 
 class ProductController {
     async create(req: Request, res: Response) {

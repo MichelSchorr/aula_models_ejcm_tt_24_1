@@ -3,6 +3,7 @@ import clientController from "../controllers/clientController";
 import productController from "../controllers/productController";
 import purchaseController from "../controllers/purchaseController";
 import authController from "../controllers/authController";
+import cartController from "../controllers/cartController";
 
 const router = Router()
 
@@ -19,7 +20,6 @@ router.post("/follow", clientController.follow)
 router.post("/unfollow", clientController.unfollow)
 
 
-
 router.get("/product", productController.index);
 router.post("/product", productController.create);
 router.get("/product/:id", productController.show);
@@ -30,6 +30,10 @@ router.post("/purchase/:id", purchaseController.create)
 router.get("/purchases", purchaseController.index)
 router.delete("/purchaseDelete/:clientId/:date", purchaseController.destroy)
 
+router.put("/addProduct", cartController.addToCart);
+router.put("/removeProduct", cartController.rmProduct);
+router.post("/cart", cartController.create);
+router.get("/cart/:clientId", cartController.getCart);
 
 
 export default router;
